@@ -1,100 +1,120 @@
 # Boolean Policies
-resource "google_organization_policy" "disable_internet_neg" {
-  org_id     = var.organization_id
-  constraint = "constraints/compute.disableInternetNetworkEndpointGroup"
+resource "google_org_policy_policy" "disable_internet_neg" {
+  name   = "organizations/${var.organization_id}/policies/compute.disableInternetNetworkEndpointGroup"
+  parent = "organizations/${var.organization_id}"
 
-  boolean_policy {
-    enforced = var.disable_internet_network_endpoint_groups
+  spec {
+    rules {
+      enforce = var.disable_internet_network_endpoint_groups ? "TRUE" : "FALSE"
+    }
   }
 }
 
-resource "google_organization_policy" "disable_nested_virtualization" {
-  org_id     = var.organization_id
-  constraint = "constraints/compute.disableNestedVirtualization"
+resource "google_org_policy_policy" "disable_nested_virtualization" {
+  name   = "organizations/${var.organization_id}/policies/compute.disableNestedVirtualization"
+  parent = "organizations/${var.organization_id}"
 
-  boolean_policy {
-    enforced = var.disable_nested_virtualization
+  spec {
+    rules {
+      enforce = var.disable_nested_virtualization ? "TRUE" : "FALSE"
+    }
   }
 }
 
-resource "google_organization_policy" "disable_serial_port_access" {
-  org_id     = var.organization_id
-  constraint = "constraints/compute.disableSerialPortAccess"
+resource "google_org_policy_policy" "disable_serial_port_access" {
+  name   = "organizations/${var.organization_id}/policies/compute.disableSerialPortAccess"
+  parent = "organizations/${var.organization_id}"
 
-  boolean_policy {
-    enforced = var.disable_serial_port_access
+  spec {
+    rules {
+      enforce = var.disable_serial_port_access ? "TRUE" : "FALSE"
+    }
   }
 }
 
-resource "google_organization_policy" "disable_serial_port_logging" {
-  org_id     = var.organization_id
-  constraint = "constraints/compute.disableSerialPortLogging"
+resource "google_org_policy_policy" "disable_serial_port_logging" {
+  name   = "organizations/${var.organization_id}/policies/compute.disableSerialPortLogging"
+  parent = "organizations/${var.organization_id}"
 
-  boolean_policy {
-    enforced = var.disable_serial_port_logging
+  spec {
+    rules {
+      enforce = var.disable_serial_port_logging ? "TRUE" : "FALSE"
+    }
   }
 }
 
-resource "google_organization_policy" "require_os_login" {
-  org_id     = var.organization_id
-  constraint = "constraints/compute.requireOsLogin"
+resource "google_org_policy_policy" "require_os_login" {
+  name   = "organizations/${var.organization_id}/policies/compute.requireOsLogin"
+  parent = "organizations/${var.organization_id}"
 
-  boolean_policy {
-    enforced = var.require_os_login
+  spec {
+    rules {
+      enforce = var.require_os_login ? "TRUE" : "FALSE"
+    }
   }
 }
 
-resource "google_organization_policy" "require_shielded_vm" {
-  org_id     = var.organization_id
-  constraint = "constraints/compute.requireShieldedVm"
+resource "google_org_policy_policy" "require_shielded_vm" {
+  name   = "organizations/${var.organization_id}/policies/compute.requireShieldedVm"
+  parent = "organizations/${var.organization_id}"
 
-  boolean_policy {
-    enforced = var.require_shielded_vm
+  spec {
+    rules {
+      enforce = var.require_shielded_vm ? "TRUE" : "FALSE"
+    }
   }
 }
 
-resource "google_organization_policy" "skip_default_network_creation" {
-  org_id     = var.organization_id
-  constraint = "constraints/compute.skipDefaultNetworkCreation"
+resource "google_org_policy_policy" "skip_default_network_creation" {
+  name   = "organizations/${var.organization_id}/policies/compute.skipDefaultNetworkCreation"
+  parent = "organizations/${var.organization_id}"
 
-  boolean_policy {
-    enforced = var.skip_default_network_creation
+  spec {
+    rules {
+      enforce = var.skip_default_network_creation ? "TRUE" : "FALSE"
+    }
   }
 }
 
 # List Policies
-resource "google_organization_policy" "trusted_image_projects" {
-  count      = length(var.trusted_image_projects) > 0 ? 1 : 0
-  org_id     = var.organization_id
-  constraint = "constraints/compute.trustedImageProjects"
+resource "google_org_policy_policy" "trusted_image_projects" {
+  count  = length(var.trusted_image_projects) > 0 ? 1 : 0
+  name   = "organizations/${var.organization_id}/policies/compute.trustedImageProjects"
+  parent = "organizations/${var.organization_id}"
 
-  list_policy {
-    allow {
-      values = var.trusted_image_projects
+  spec {
+    rules {
+      values {
+        allowed_values = var.trusted_image_projects
+      }
     }
   }
 }
 
-resource "google_organization_policy" "vm_can_ip_forward" {
-  count      = length(var.vm_can_ip_forward) > 0 ? 1 : 0
-  org_id     = var.organization_id
-  constraint = "constraints/compute.vmCanIpForward"
+resource "google_org_policy_policy" "vm_can_ip_forward" {
+  count  = length(var.vm_can_ip_forward) > 0 ? 1 : 0
+  name   = "organizations/${var.organization_id}/policies/compute.vmCanIpForward"
+  parent = "organizations/${var.organization_id}"
 
-  list_policy {
-    allow {
-      values = var.vm_can_ip_forward
+  spec {
+    rules {
+      values {
+        allowed_values = var.vm_can_ip_forward
+      }
     }
   }
 }
 
-resource "google_organization_policy" "vm_external_ip_access" {
-  count      = length(var.vm_external_ip_access) > 0 ? 1 : 0
-  org_id     = var.organization_id
-  constraint = "constraints/compute.vmExternalIpAccess"
+resource "google_org_policy_policy" "vm_external_ip_access" {
+  count  = length(var.vm_external_ip_access) > 0 ? 1 : 0
+  name   = "organizations/${var.organization_id}/policies/compute.vmExternalIpAccess"
+  parent = "organizations/${var.organization_id}"
 
-  list_policy {
-    allow {
-      values = var.vm_external_ip_access
+  spec {
+    rules {
+      values {
+        allowed_values = var.vm_external_ip_access
+      }
     }
   }
 }

@@ -1,10 +1,12 @@
-resource "google_organization_policy" "resource_location_restriction" {
-  org_id     = var.organization_id
-  constraint = "constraints/gcp.resourceLocations"
+resource "google_org_policy_policy" "resource_location_restriction" {
+  name   = "organizations/${var.organization_id}/policies/gcp.resourceLocations"
+  parent = "organizations/${var.organization_id}"
 
-  list_policy {
-    allow {
-      values = var.allowed_resource_locations
+  spec {
+    rules {
+      values {
+        allowed_values = var.allowed_resource_locations
+      }
     }
   }
 }
