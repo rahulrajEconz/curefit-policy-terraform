@@ -31,4 +31,4 @@ allow_sa_credential_lifetime_extension = [] # Add allowed SAs
 restrict_xpn_project_lien_removal = true
 
 # Service Consumer
-automatic_iam_grants = true
+automatic_iam_grants = false
