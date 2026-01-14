@@ -24,11 +24,11 @@ vm_external_ip_access                    = [] # Add allowed instances
 disable_service_account_creation       = false # Initial setup might need SAs
 disable_service_account_key_creation   = true
 disable_service_account_key_upload     = true # Default
-allowed_policy_member_domains          = ["C048fj9zg",
-"C04dpnca7",
-"C0155qupi",
-"C01tyg1t2",
-"C043hlq40"] # Add your domains
+# allowed_policy_member_domains          = ["C048fj9zg",
+# "C04dpnca7",
+# "C0155qupi",
+# "C01tyg1t2",
+# "C043hlq40"] # Add your domains
 allow_sa_credential_lifetime_extension = [] # Add allowed SAs
 
 # Resource Manager
