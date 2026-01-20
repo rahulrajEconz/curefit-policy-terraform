@@ -1,12 +1,14 @@
 module "gcp_core" {
   source                     = "./modules/gcp_core"
-  organization_id            = var.organization_id
+  for_each                   = toset(var.project_ids)
+  project_id                 = each.value
   allowed_resource_locations = var.allowed_resource_locations
 }
 
 module "cloud_storage" {
   source                              = "./modules/cloud_storage"
-  organization_id                     = var.organization_id
+  for_each                            = toset(var.project_ids)
+  project_id                          = each.value
   enforce_public_access_prevention    = var.enforce_public_access_prevention
   enforce_uniform_bucket_level_access = var.enforce_uniform_bucket_level_access
   retention_policy_durations          = var.retention_policy_durations
@@ -14,7 +16,8 @@ module "cloud_storage" {
 
 module "compute_engine" {
   source                                   = "./modules/compute_engine"
-  organization_id                          = var.organization_id
+  for_each                                 = toset(var.project_ids)
+  project_id                               = each.value
   disable_internet_network_endpoint_groups = var.disable_internet_network_endpoint_groups
   disable_nested_virtualization            = var.disable_nested_virtualization
   disable_serial_port_access               = var.disable_serial_port_access
@@ -29,7 +32,8 @@ module "compute_engine" {
 
 module "iam" {
   source                                 = "./modules/iam"
-  organization_id                        = var.organization_id
+  for_each                               = toset(var.project_ids)
+  project_id                             = each.value
   disable_service_account_creation       = var.disable_service_account_creation
   disable_service_account_key_creation   = var.disable_service_account_key_creation
   disable_service_account_key_upload     = var.disable_service_account_key_upload
@@ -38,13 +42,15 @@ module "iam" {
 }
 
 module "resource_manager" {
-  source                              = "./modules/resource_manager"
-  organization_id                     = var.organization_id
-  restrict_xpn_project_lien_removal   = var.restrict_xpn_project_lien_removal
+  source                            = "./modules/resource_manager"
+  for_each                          = toset(var.project_ids)
+  project_id                        = each.value
+  restrict_xpn_project_lien_removal = var.restrict_xpn_project_lien_removal
 }
 
 module "service_consumer" {
   source               = "./modules/service_consumer"
-  organization_id      = var.organization_id
+  for_each             = toset(var.project_ids)
+  project_id           = each.value
   automatic_iam_grants = var.automatic_iam_grants
 }

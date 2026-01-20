@@ -1,5 +1,5 @@
-variable "organization_id" {
-  description = "The organization ID to apply the policies to"
+variable "project_id" {
+  description = "The project ID to apply the policies to"
   type        = string
 }
 

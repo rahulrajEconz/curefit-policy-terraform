@@ -1,4 +1,4 @@
-organization_id = "1234567890" # REPLACE WITH YOUR ORG ID
+project_ids = ["test-tf-484914"] # REPLACE WITH YOUR PROJECT IDs
 
 # GCP Core
 allowed_resource_locations = ["in:asia-south1"]
@@ -21,22 +21,19 @@ vm_can_ip_forward                        = [] # Add allowed instances
 vm_external_ip_access                    = [] # Add allowed instances
 
 # IAM
-disable_service_account_creation       = false # Initial setup might need SAs
-disable_service_account_key_creation   = true
-disable_service_account_key_upload     = true # Default
-<<<<<<< HEAD
+disable_service_account_creation     = false # Initial setup might need SAs
+disable_service_account_key_creation = true
+disable_service_account_key_upload   = true # Default
 # allowed_policy_member_domains          = ["C048fj9zg",
 # "C04dpnca7",
 # "C0155qupi",
 # "C01tyg1t2",
 # "C043hlq40"] # Add your domains
-=======
-allowed_policy_member_domains          = [] # Add your domains
->>>>>>> parent of 1797bb3 (migrate to v3 from legacy)
 allow_sa_credential_lifetime_extension = [] # Add allowed SAs
 
 # Resource Manager
 restrict_xpn_project_lien_removal = true
 
 # Service Consumer
-automatic_iam_grants = false
+#Disable Automatic IAM Grants for Default Service Accounts"
+automatic_iam_grants = false 

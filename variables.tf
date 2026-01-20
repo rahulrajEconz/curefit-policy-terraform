@@ -1,6 +1,6 @@
-variable "organization_id" {
-  description = "The organization ID to apply the policies to"
-  type        = string
+variable "project_ids" {
+  description = "The list of project IDs to apply the policies to"
+  type        = list(string)
 }
 
 # GCP Core
