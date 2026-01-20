@@ -1,7 +1,7 @@
 project_ids = ["test-tf-484914"] # REPLACE WITH YOUR PROJECT IDs
 
 # GCP Core
-allowed_resource_locations = ["in:asia-south1"]
+allowed_resource_locations = ["asia-south1"]
 
 # Cloud Storage
 enforce_public_access_prevention    = true
