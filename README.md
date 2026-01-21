@@ -55,18 +55,18 @@ disable_nested_virtualization = {
 ```
 
 > [!IMPORTANT]
-> **Boolean Policy Requirement**: GCP requires all Boolean policies to have at least one **unconditional rule** (a rule without any tags/conditions). This rule acts as the global default for the project.
+> **Boolean Policy Requirement**: GCP requires all Boolean policies to have at least one **unconditional rule**. Furthermore, any **conditional rules** in a Boolean policy MUST be set to the **opposite value** of the base rule (effectively acting as exceptions).
 
-**Example with Unconditional Base Rule:**
+**Correct Boolean Exception Structure:**
 ```hcl
 disable_serial_port_access = {
   project_ids = ["test-project"]
   rules = [
-    { enforce = true }, # UNCONDITIONAL BASE RULE (Required)
+    { enforce = true }, # 1. BASE RULE: Enforce by default
     {
-      title = "Exemption"
-      enforce = false
-      tags = { "env" = "dev" }
+      title   = "Exception"
+      enforce = false   # 2. EXCEPTION: Must be opposite of base rule
+      tags    = { "env" = "dev" }
     }
   ]
 }

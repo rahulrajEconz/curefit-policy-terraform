@@ -69,23 +69,14 @@ disable_serial_port_access = {
   project_ids = ["test-tf-484914"]
   rules = [
     {
-      enforce = true # UNCONDITIONAL BASE RULE (Required for Boolean Policies)
-    },
-    {
-      title       = "Strict Security Rule"
-      description = "Enforce on high-compliance projects"
-      enforce     = true
-      tags = {
-        "12345/compliance" = "high" # "has value"
-        "12345/security"   = "*"    # "has key" (Wildcard support)
-      }
+      enforce = true # UNCONDITIONAL BASE RULE (Enforced by default)
     },
     {
       title       = "ID-based Exclusion"
-      description = "Exempt specific tag IDs"
-      enforce     = false
+      description = "Allow serial port access for specific instances (Exception)"
+      enforce     = false # OPPOSITE OF BASE RULE (Required for Boolean conditions)
       tag_ids = {
-        "tagKeys/456" = "tagValues/789" # "has value ID"
+        "tagKeys/456" = "tagValues/789"
       }
     }
   ]
