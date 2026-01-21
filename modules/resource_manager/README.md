@@ -4,9 +4,9 @@ This module manages policies related to the resource hierarchy and operational c
 
 ## Managed Policies
 
-| Policy Constraint | Description |
-| :--- | :--- |
-| `compute.restrictXpnProjectLienRemoval` | Restricts the removal of project liens for Shared VPC host projects. |
+| Policy Constraint | Description | Default Behavior (if project targeted) |
+| :--- | :--- | :--- |
+| `compute.restrictXpnProjectLienRemoval` | Restricts the removal of project liens for Shared VPC host projects. | **Enforced** |
 
 ## Variables
 

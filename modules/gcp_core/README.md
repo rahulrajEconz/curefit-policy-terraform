@@ -4,9 +4,9 @@ This module manages general Google Cloud Platform organization policies.
 
 ## Managed Policies
 
-| Policy Constraint | Description |
-| :--- | :--- |
-| `gcp.resourceLocations` | Restricts the locations (regions/zones) where GCP resources can be created. |
+| Policy Constraint | Description | Default Behavior (if project targeted) |
+| :--- | :--- | :--- |
+| `gcp.resourceLocations` | Restricts the locations (regions/zones) where GCP resources can be created. | **No restrictions** (all locations allowed) |
 
 ## Variables
 

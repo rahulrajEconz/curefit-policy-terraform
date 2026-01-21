@@ -5,22 +5,22 @@ This module manages security and operational policies for Google Compute Engine 
 ## Managed Policies
 
 ### Boolean Policies (Enforce TRUE/FALSE)
-| Policy Constraint | Description |
-| :--- | :--- |
-| `compute.disableInternetNetworkEndpointGroup` | Prevents creation of Internet NEGs. |
-| `compute.disableNestedVirtualization` | Disables nested virtualization for VM instances. |
-| `compute.disableSerialPortAccess` | Disables access to VM serial ports. |
-| `compute.disableSerialPortLogging` | Disables VM serial port logging to Stackdriver. |
-| `compute.requireOsLogin` | Enforces OS Login for all VM instances in the project. |
-| `compute.requireShieldedVm` | Requires all VM instances to be created as Shielded VMs. |
-| `compute.skipDefaultNetworkCreation` | Skips the creation of the default network during project creation. |
+| Policy Constraint | Description | Default Behavior (if project targeted) |
+| :--- | :--- | :--- |
+| `compute.disableInternetNetworkEndpointGroup` | Prevents creation of Internet NEGs. | **Enforced** |
+| `compute.disableNestedVirtualization` | Disables nested virtualization for VM instances. | **Enforced** |
+| `compute.disableSerialPortAccess` | Disables access to VM serial ports. | **Enforced** |
+| `compute.disableSerialPortLogging` | Disables VM serial port logging to Stackdriver. | **Enforced** |
+| `compute.requireOsLogin` | Enforces OS Login for all VM instances in the project. | **Enforced** |
+| `compute.requireShieldedVm` | Requires all VM instances to be created as Shielded VMs. | **Enforced** |
+| `compute.skipDefaultNetworkCreation` | Skips the creation of the default network during project creation. | **Enforced** |
 
 ### List Policies (Allowed/Denied Values)
-| Policy Constraint | Description |
-| :--- | :--- |
-| `compute.trustedImageProjects` | Restricts the projects from which VM images can be used. |
-| `compute.vmCanIpForward` | Restricts which VMs are allowed to use IP forwarding. |
-| `compute.vmExternalIpAccess` | Restricts which VMs are allowed to have external IP addresses. |
+| Policy Constraint | Description | Default Behavior (if project targeted) |
+| :--- | :--- | :--- |
+| `compute.trustedImageProjects` | Restricts the projects from which VM images can be used. | **No restrictions** |
+| `compute.vmCanIpForward` | Restricts which VMs are allowed to use IP forwarding. | **No restrictions** |
+| `compute.vmExternalIpAccess` | Restricts which VMs are allowed to have external IP addresses. | **No restrictions** |
 
 ## Example Configuration
 

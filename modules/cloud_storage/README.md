@@ -4,11 +4,11 @@ This module manages security policies for Google Cloud Storage buckets.
 
 ## Managed Policies
 
-| Policy Constraint | Description |
-| :--- | :--- |
-| `storage.publicAccessPrevention` | Prevents public access to data in your Cloud Storage buckets. |
-| `storage.uniformBucketLevelAccess` | Enforces uniform bucket-level access on Cloud Storage buckets. |
-| `storage.retentionPolicySeconds` | Restricts the allowed retention periods for Cloud Storage buckets. |
+| Policy Constraint | Description | Default Behavior (if project targeted) |
+| :--- | :--- | :--- |
+| `storage.publicAccessPrevention` | Prevents public access to data in your Cloud Storage buckets. | **Enforced** |
+| `storage.uniformBucketLevelAccess` | Enforces uniform bucket-level access on Cloud Storage buckets. | **Enforced** |
+| `storage.retentionPolicySeconds` | Restricts the allowed retention periods for Cloud Storage buckets. | **No restrictions** |
 
 ## Variables
 

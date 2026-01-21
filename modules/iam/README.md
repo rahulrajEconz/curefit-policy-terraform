@@ -5,17 +5,17 @@ This module manages Identity and Access Management policies to secure service ac
 ## Managed Policies
 
 ### Boolean Policies
-| Policy Constraint | Description |
-| :--- | :--- |
-| `iam.disableServiceAccountCreation` | Prevents creation of new Service Accounts. |
-| `iam.disableServiceAccountKeyCreation` | Prevents creation of new Service Account keys. |
-| `iam.disableServiceAccountKeyUpload` | Prevents uploading of external Service Account keys. |
+| Policy Constraint | Description | Default Behavior (if project targeted) |
+| :--- | :--- | :--- |
+| `iam.disableServiceAccountCreation` | Prevents creation of new Service Accounts. | **Enforced** |
+| `iam.disableServiceAccountKeyCreation` | Prevents creation of new Service Account keys. | **Enforced** |
+| `iam.disableServiceAccountKeyUpload` | Prevents uploading of external Service Account keys. | **Enforced** |
 
 ### List Policies
-| Policy Constraint | Description |
-| :--- | :--- |
-| `iam.allowedPolicyMemberDomains` | Restricts the domains that can be added to IAM policies. |
-| `iam.allowServiceAccountCredentialLifetimeExtension` | Restricts which SAs can extend credential lifetimes. |
+| Policy Constraint | Description | Default Behavior (if project targeted) |
+| :--- | :--- | :--- |
+| `iam.allowedPolicyMemberDomains` | Restricts the domains that can be added to IAM policies. | **No restrictions** |
+| `iam.allowServiceAccountCredentialLifetimeExtension` | Restricts which SAs can extend credential lifetimes. | **No restrictions** |
 
 ## Example Configuration
 

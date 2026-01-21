@@ -12,6 +12,9 @@ This repository provides a high-level, human-friendly way to manage Google Cloud
     - **"has key ID" / "has value ID"**: Matching by immutable Tag IDs.
 - **Advanced CEL Generation**: Automatically generates complex Common Expression Language (CEL) logic based on your inputs.
 
+> [!IMPORTANT]
+> **Project Targeting Requirement**: An Organization Policy is **ONLY** applied to the projects explicitly listed in the `project_ids` field of that policy's configuration. If `project_ids` is empty, the policy will not be created or managed for any project.
+
 ---
 
 ## 📂 Project Structure

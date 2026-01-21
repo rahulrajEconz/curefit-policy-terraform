@@ -4,9 +4,9 @@ This module manages policies related to service consumption and default IAM gran
 
 ## Managed Policies
 
-| Policy Constraint | Description |
-| :--- | :--- |
-| `iam.automaticIamGrantsForDefaultServiceAccounts` | Disables automatic IAM grants for default service accounts. |
+| Policy Constraint | Description | Default Behavior (if project targeted) |
+| :--- | :--- | :--- |
+| `iam.automaticIamGrantsForDefaultServiceAccounts` | Disables automatic IAM grants for default service accounts. | **Enforced** |
 
 ## Variables
 
