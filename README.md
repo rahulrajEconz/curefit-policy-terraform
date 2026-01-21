@@ -54,8 +54,23 @@ disable_nested_virtualization = {
 }
 ```
 
-### 3. Conditions & Operators (The Condition Builder)
-The `rules` list supports several operator-aligned fields:
+> [!IMPORTANT]
+> **Boolean Policy Requirement**: GCP requires all Boolean policies to have at least one **unconditional rule** (a rule without any tags/conditions). This rule acts as the global default for the project.
+
+**Example with Unconditional Base Rule:**
+```hcl
+disable_serial_port_access = {
+  project_ids = ["test-project"]
+  rules = [
+    { enforce = true }, # UNCONDITIONAL BASE RULE (Required)
+    {
+      title = "Exemption"
+      enforce = false
+      tags = { "env" = "dev" }
+    }
+  ]
+}
+```
 
 | Console Operator | Terraform Field | Example Value |
 | :--- | :--- | :--- |

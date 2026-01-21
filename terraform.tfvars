@@ -69,6 +69,9 @@ disable_serial_port_access = {
   project_ids = ["test-tf-484914"]
   rules = [
     {
+      enforce = true # UNCONDITIONAL BASE RULE (Required for Boolean Policies)
+    },
+    {
       title       = "Strict Security Rule"
       description = "Enforce on high-compliance projects"
       enforce     = true
