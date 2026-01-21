@@ -1,6 +1,6 @@
 # Curefit Terraform - GCP Organization Policies
 
-This repository provides a high-level, human-friendly way to manage GCP Organization Policies using Terraform. It is designed to mirror the **GCP Console's Condition Builder** while providing the automation and precision of Infrastructure as Code.
+This repository provides a high-level, human-friendly way to manage Google Cloud Platform (GCP) Organization Policies using Terraform. It is designed to mirror the **GCP Console's Condition Builder** while providing the automation and precision of Infrastructure as Code.
 
 ## 🚀 Key Features
 
@@ -16,115 +16,81 @@ This repository provides a high-level, human-friendly way to manage GCP Organiza
 
 ## 📂 Project Structure
 
-```
-.
-├── main.tf                 # Root module (clean instantiation of domain modules)
-├── variables.tf            # Universal schema definitions
-├── terraform.tfvars        # YOUR CONFIGURATION (Project lists, rules, conditions)
-└── modules/                # Domain-specific Resource Iterators
-    ├── gcp_core            # General GCP restriction policies
-    ├── cloud_storage       # Bucket security (PAP, UBLA, etc.)
-    ├── compute_engine      # VM & Network security (Serial Port, OS-Login, etc.)
-    ├── iam                 # IAM security (SA creation, domain restrictions)
-    ├── resource_manager    # Resource hierarchy & Liens
-    └── service_consumer    # API & Service grants
-```
+This project is organized into domain-specific modules for better maintainability:
+
+| Module | Description |
+| :--- | :--- |
+| [**GCP Core**](./modules/gcp_core) | General resource location and basic GCP restrictions. |
+| [**Cloud Storage**](./modules/cloud_storage) | Security for buckets (Public Access, UBLA, Retention). |
+| [**Compute Engine**](./modules/compute_engine) | VM and Network security (Serial Port, OS-Login, Shielded VMs). |
+| [**IAM**](./modules/iam) | Service Account controls and domain restrictions. |
+| [**Resource Manager**](./modules/resource_manager) | Project-level liens and hierarchy controls. |
+| [**Service Consumer**](./modules/service_consumer) | Service-level IAM grants and API controls. |
 
 ---
 
 ## 🛠️ Configuration Guide (`terraform.tfvars`)
 
-Each policy is an object with two main fields: `project_ids` and `rules`.
-
 ### 1. Simple Enforcement
-To apply a policy to a specific project without conditions:
+To apply a policy to projects without conditions:
 ```hcl
 require_os_login = {
-  project_ids = ["my-project-id"]
+  project_ids = ["proj-a", "proj-b"]
   rules       = [{ enforce = true }]
 }
 ```
 
-### 2. Multi-Project Support
-You can target multiple projects per policy:
-```hcl
-disable_nested_virtualization = {
-  project_ids = ["proj-dev", "proj-prod", "proj-security"]
-  rules       = [{ enforce = true }]
-}
-```
+### 2. Boolean Policy Requirements (CRITICAL)
+GCP enforces strict logic for Boolean policies (Enforce On/Off):
+1. **Unconditional Rule**: You MUST include one rule without tags/conditions to serve as the default.
+2. **Opposite Exceptions**: Conditional rules MUST have the **opposite value** of the base rule.
 
-> [!IMPORTANT]
-> **Boolean Policy Requirement**: GCP requires all Boolean policies to have at least one **unconditional rule**. Furthermore, any **conditional rules** in a Boolean policy MUST be set to the **opposite value** of the base rule (effectively acting as exceptions).
-
-**Correct Boolean Exception Structure:**
+**Correct Example:**
 ```hcl
 disable_serial_port_access = {
-  project_ids = ["test-project"]
+  project_ids = ["my-project"]
   rules = [
-    { enforce = true }, # 1. BASE RULE: Enforce by default
+    { enforce = true }, # 1. BASE: Enforce everywhere by default
     {
-      title   = "Exception"
-      enforce = false   # 2. EXCEPTION: Must be opposite of base rule
+      title   = "Exception for Dev"
+      enforce = false   # 2. EXCEPTION: Must be 'false' if base is 'true'
       tags    = { "env" = "dev" }
     }
   ]
 }
 ```
 
-| Console Operator | Terraform Field | Example Value |
-| :--- | :--- | :--- |
-| **has key** | `tags` | `{ "123/env" = "*" }` |
-| **has value** | `tags` | `{ "123/env" = "prod" }` |
-| **has key ID** | `tag_ids` | `{ "tagKeys/123" = "*" }` |
-| **has value ID** | `tag_ids` | `{ "tagKeys/123" = "tagValues/456" }` |
-
-**Example with Metadata and Multi-Tag logic:**
-```hcl
-allowed_resource_locations = {
-  project_ids = ["test-tf-project"]
-  rules = [
-    {
-      title       = "Mumbai Prod Only"
-      description = "Strict regional control for prod environments"
-      allowed_values = ["asia-south1"]
-      tags = {
-        "123/environment" = "prod"
-        "123/compliance"  = "*" # Only if a compliance tag IS PRESENT
-      }
-    }
-  ]
-}
-```
-
 ---
 
-## ⚙️ Prerequisites
+## 🧠 Custom Condition Expressions (CEL)
 
-- **Terraform**: v1.3+ (Uses optional object fields).
-- **GCP Permissions**: `roles/orgpolicy.policyAdmin` at the Organization or Project level.
-- **Authentication**: `gcloud auth application-default login`.
+The system automatically generates CEL expressions based on the `tags` and `tag_ids` maps. Here is how they map to Console Operators:
+
+### Mapping Table
+
+| Console Operator | Input Field | Condition Expression Generator |
+| :--- | :--- | :--- |
+| **has key** | `tags = { "k" = "*" }` | `resource.matchTag('k', '*')` |
+| **has value** | `tags = { "k" = "v" }` | `resource.matchTag('k', 'v')` |
+| **has key ID** | `tag_ids = { "k_id" = "*" }` | `resource.matchTagId('k_id', '*')` |
+| **has value ID** | `tag_ids = { "k_id" = "v_id" }` | `resource.matchTagId('k_id', 'v_id')` |
+
+### How Logic is Joined
+If you provide multiple keys, the system joins them with `&&` (AND logic):
+```hcl
+tags = {
+  "env"  = "prod"
+  "tier" = "*"
+}
+# Resulting CEL:
+# resource.matchTag('env', 'prod') && resource.matchTag('tier', '*')
+```
 
 ---
 
 ## 🏁 Execution
 
-1. **Initialize** (downloads modules):
-   ```bash
-   terraform init
-   ```
-
-2. **Validate** (check syntax & logic):
-   ```bash
-   terraform validate
-   ```
-
-3. **Plan** (preview changes):
-   ```bash
-   terraform plan
-   ```
-
-4. **Apply** (deploy to GCP):
-   ```bash
-   terraform apply
-   ```
+1. **Initialize**: `terraform init`
+2. **Validate**: `terraform validate`
+3. **Plan**: `terraform plan`
+4. **Apply**: `terraform apply`
