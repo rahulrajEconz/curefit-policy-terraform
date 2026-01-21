@@ -1,59 +1,140 @@
 resource "google_org_policy_policy" "disable_sa_creation" {
-  name   = "projects/${var.project_id}/policies/iam.disableServiceAccountCreation"
-  parent = "projects/${var.project_id}"
+  for_each = toset(var.disable_service_account_creation.project_ids)
+  name     = "projects/${each.value}/policies/iam.disableServiceAccountCreation"
+  parent   = "projects/${each.value}"
 
   spec {
-    rules {
-      enforce = var.disable_service_account_creation ? "TRUE" : "FALSE"
+    dynamic "rules" {
+      for_each = var.disable_service_account_creation.rules
+      content {
+        dynamic "condition" {
+          for_each = (length(rules.value.tags) > 0 || length(rules.value.tag_ids) > 0) ? [1] : []
+          content {
+            title       = rules.value.title != null ? rules.value.title : "Condition"
+            description = rules.value.description
+            expression = join(" && ", concat(
+              [for k, v in rules.value.tags : "resource.matchTag('${k}', '${v}')"],
+              [for k, v in rules.value.tag_ids : "resource.matchTagId('${k}', '${v}')"]
+            ))
+          }
+        }
+        enforce = rules.value.enforce != null ? (rules.value.enforce ? "TRUE" : "FALSE") : null
+      }
     }
   }
 }
 
 resource "google_org_policy_policy" "disable_sa_key_creation" {
-  name   = "projects/${var.project_id}/policies/iam.disableServiceAccountKeyCreation"
-  parent = "projects/${var.project_id}"
+  for_each = toset(var.disable_service_account_key_creation.project_ids)
+  name     = "projects/${each.value}/policies/iam.disableServiceAccountKeyCreation"
+  parent   = "projects/${each.value}"
 
   spec {
-    rules {
-      enforce = var.disable_service_account_key_creation ? "TRUE" : "FALSE"
+    dynamic "rules" {
+      for_each = var.disable_service_account_key_creation.rules
+      content {
+        dynamic "condition" {
+          for_each = (length(rules.value.tags) > 0 || length(rules.value.tag_ids) > 0) ? [1] : []
+          content {
+            title       = rules.value.title != null ? rules.value.title : "Condition"
+            description = rules.value.description
+            expression = join(" && ", concat(
+              [for k, v in rules.value.tags : "resource.matchTag('${k}', '${v}')"],
+              [for k, v in rules.value.tag_ids : "resource.matchTagId('${k}', '${v}')"]
+            ))
+          }
+        }
+        enforce = rules.value.enforce != null ? (rules.value.enforce ? "TRUE" : "FALSE") : null
+      }
     }
   }
 }
 
 resource "google_org_policy_policy" "disable_sa_key_upload" {
-  name   = "projects/${var.project_id}/policies/iam.disableServiceAccountKeyUpload"
-  parent = "projects/${var.project_id}"
+  for_each = toset(var.disable_service_account_key_upload.project_ids)
+  name     = "projects/${each.value}/policies/iam.disableServiceAccountKeyUpload"
+  parent   = "projects/${each.value}"
 
   spec {
-    rules {
-      enforce = var.disable_service_account_key_upload ? "TRUE" : "FALSE"
+    dynamic "rules" {
+      for_each = var.disable_service_account_key_upload.rules
+      content {
+        dynamic "condition" {
+          for_each = (length(rules.value.tags) > 0 || length(rules.value.tag_ids) > 0) ? [1] : []
+          content {
+            title       = rules.value.title != null ? rules.value.title : "Condition"
+            description = rules.value.description
+            expression = join(" && ", concat(
+              [for k, v in rules.value.tags : "resource.matchTag('${k}', '${v}')"],
+              [for k, v in rules.value.tag_ids : "resource.matchTagId('${k}', '${v}')"]
+            ))
+          }
+        }
+        enforce = rules.value.enforce != null ? (rules.value.enforce ? "TRUE" : "FALSE") : null
+      }
     }
   }
 }
 
 resource "google_org_policy_policy" "allowed_policy_member_domains" {
-  count  = length(var.allowed_policy_member_domains) > 0 ? 1 : 0
-  name   = "projects/${var.project_id}/policies/iam.allowedPolicyMemberDomains"
-  parent = "projects/${var.project_id}"
+  for_each = toset(var.allowed_policy_member_domains.project_ids)
+  name     = "projects/${each.value}/policies/iam.allowedPolicyMemberDomains"
+  parent   = "projects/${each.value}"
 
   spec {
-    rules {
-      values {
-        allowed_values = var.allowed_policy_member_domains
+    dynamic "rules" {
+      for_each = var.allowed_policy_member_domains.rules
+      content {
+        dynamic "condition" {
+          for_each = (length(rules.value.tags) > 0 || length(rules.value.tag_ids) > 0) ? [1] : []
+          content {
+            title       = rules.value.title != null ? rules.value.title : "Condition"
+            description = rules.value.description
+            expression = join(" && ", concat(
+              [for k, v in rules.value.tags : "resource.matchTag('${k}', '${v}')"],
+              [for k, v in rules.value.tag_ids : "resource.matchTagId('${k}', '${v}')"]
+            ))
+          }
+        }
+        dynamic "values" {
+          for_each = (rules.value.allowed_values != null || rules.value.denied_values != null) ? [1] : []
+          content {
+            allowed_values = rules.value.allowed_values
+            denied_values  = rules.value.denied_values
+          }
+        }
       }
     }
   }
 }
 
 resource "google_org_policy_policy" "allow_sa_credential_lifetime_extension" {
-  count  = length(var.allow_sa_credential_lifetime_extension) > 0 ? 1 : 0
-  name   = "projects/${var.project_id}/policies/iam.allowServiceAccountCredentialLifetimeExtension"
-  parent = "projects/${var.project_id}"
+  for_each = toset(var.allow_sa_credential_lifetime_extension.project_ids)
+  name     = "projects/${each.value}/policies/iam.allowServiceAccountCredentialLifetimeExtension"
+  parent   = "projects/${each.value}"
 
   spec {
-    rules {
-      values {
-        allowed_values = var.allow_sa_credential_lifetime_extension
+    dynamic "rules" {
+      for_each = var.allow_sa_credential_lifetime_extension.rules
+      content {
+        dynamic "condition" {
+          for_each = (length(rules.value.tags) > 0 || length(rules.value.tag_ids) > 0) ? [1] : []
+          content {
+            title       = rules.value.title != null ? rules.value.title : "Condition"
+            description = rules.value.description
+            expression = join(" && ", concat(
+              [for k, v in rules.value.tags : "resource.matchTag('${k}', '${v}')"],
+              [for k, v in rules.value.tag_ids : "resource.matchTagId('${k}', '${v}')"]
+            ))
+          }
+        }
+        dynamic "values" {
+          for_each = (rules.value.allowed_values != null || rules.value.denied_values != null) ? [1] : []
+          content {
+            allowed_values = rules.value.allowed_values
+            denied_values  = rules.value.denied_values
+          }
+        }
       }
     }
   }

@@ -1,63 +1,115 @@
 # Curefit Terraform - GCP Organization Policies
 
-This repository contains Terraform modules to manage Google Cloud Platform (GCP) Organization Policies for the Curefit project. It enforces security best practices across the organization.
+This repository provides a high-level, human-friendly way to manage GCP Organization Policies using Terraform. It is designed to mirror the **GCP Console's Condition Builder** while providing the automation and precision of Infrastructure as Code.
 
-## Project Structure
+## 🚀 Key Features
+
+- **Console Alignment**: Define policies with `title`, `description`, `tags`, and `tag_ids`—exactly as seen in the Google Cloud Console.
+- **Universal Project Control**: Every single policy can be targeted to a specific, unique list of `project_ids`.
+- **Operator Support**: 
+    - **"has key"**: Using wildcards (`*`).
+    - **"has value"**: Standard key-value matching.
+    - **"has key ID" / "has value ID"**: Matching by immutable Tag IDs.
+- **Advanced CEL Generation**: Automatically generates complex Common Expression Language (CEL) logic based on your inputs.
+
+---
+
+## 📂 Project Structure
 
 ```
 .
-├── main.tf                 # Root module instantiating all sub-modules
-├── variables.tf            # Input variables for the root module
-├── terraform.tfvars        # Variable definitions (example values)
-└── modules/                # Reusable Terraform modules
-    ├── gcp_core            # General GCP organization policies
-    ├── cloud_storage       # Storage bucket security policies
-    ├── compute_engine      # VM and network security policies
-    ├── iam                 # Identity and Access Management policies
-    ├── resource_manager    # Resource hierarchy policies
-    └── service_consumer    # Service consumer policies
+├── main.tf                 # Root module (clean instantiation of domain modules)
+├── variables.tf            # Universal schema definitions
+├── terraform.tfvars        # YOUR CONFIGURATION (Project lists, rules, conditions)
+└── modules/                # Domain-specific Resource Iterators
+    ├── gcp_core            # General GCP restriction policies
+    ├── cloud_storage       # Bucket security (PAP, UBLA, etc.)
+    ├── compute_engine      # VM & Network security (Serial Port, OS-Login, etc.)
+    ├── iam                 # IAM security (SA creation, domain restrictions)
+    ├── resource_manager    # Resource hierarchy & Liens
+    └── service_consumer    # API & Service grants
 ```
 
-## Prerequisites
+---
 
-- **Terraform**: v1.0 or later recommended.
-- **GCP Credentials**: You must have `roles/orgpolicy.policyAdmin` on the Organization.
-    - Run `gcloud auth application-default login` to set up local credentials.
+## 🛠️ Configuration Guide (`terraform.tfvars`)
 
-## Usage
+Each policy is an object with two main fields: `project_ids` and `rules`.
 
-### 1. Initialize
-Initialize the Terraform workspace to download providers and modules.
-```bash
-terraform init
+### 1. Simple Enforcement
+To apply a policy to a specific project without conditions:
+```hcl
+require_os_login = {
+  project_ids = ["my-project-id"]
+  rules       = [{ enforce = true }]
+}
 ```
 
-### 2. Configure Variables
-The main required variable is `organization_id`.
-You can set it in `terraform.tfvars` or pass it via command line:
-```bash
-terraform plan -var="organization_id=123456789012"
+### 2. Multi-Project Support
+You can target multiple projects per policy:
+```hcl
+disable_nested_virtualization = {
+  project_ids = ["proj-dev", "proj-prod", "proj-security"]
+  rules       = [{ enforce = true }]
+}
 ```
 
-**Key Variables:**
-- `organization_id`: (Required) The ID of your GCP Organization.
-- `allowed_resource_locations`: List of allowed GCP regions/zones.
-- `trusted_image_projects`: List of projects allowed for VM images.
+### 3. Conditions & Operators (The Condition Builder)
+The `rules` list supports several operator-aligned fields:
 
-Most security booleans (e.g., `disable_service_account_creation`) default to `true` for a "secure by default" posture. See `variables.tf` for all options.
+| Console Operator | Terraform Field | Example Value |
+| :--- | :--- | :--- |
+| **has key** | `tags` | `{ "123/env" = "*" }` |
+| **has value** | `tags` | `{ "123/env" = "prod" }` |
+| **has key ID** | `tag_ids` | `{ "tagKeys/123" = "*" }` |
+| **has value ID** | `tag_ids` | `{ "tagKeys/123" = "tagValues/456" }` |
 
-### 3. Plan
-Preview the changes that Terraform will make.
-```bash
-terraform plan
+**Example with Metadata and Multi-Tag logic:**
+```hcl
+allowed_resource_locations = {
+  project_ids = ["test-tf-project"]
+  rules = [
+    {
+      title       = "Mumbai Prod Only"
+      description = "Strict regional control for prod environments"
+      allowed_values = ["asia-south1"]
+      tags = {
+        "123/environment" = "prod"
+        "123/compliance"  = "*" # Only if a compliance tag IS PRESENT
+      }
+    }
+  ]
+}
 ```
 
-### 4. Apply
-Apply the changes to your GCP Organization.
-```bash
-terraform apply
-```
+---
 
-## Modules
+## ⚙️ Prerequisites
 
-The logic is split into domain-specific modules in the `modules/` directory. Each module manages a set of related Organization Policy constraints.
+- **Terraform**: v1.3+ (Uses optional object fields).
+- **GCP Permissions**: `roles/orgpolicy.policyAdmin` at the Organization or Project level.
+- **Authentication**: `gcloud auth application-default login`.
+
+---
+
+## 🏁 Execution
+
+1. **Initialize** (downloads modules):
+   ```bash
+   terraform init
+   ```
+
+2. **Validate** (check syntax & logic):
+   ```bash
+   terraform validate
+   ```
+
+3. **Plan** (preview changes):
+   ```bash
+   terraform plan
+   ```
+
+4. **Apply** (deploy to GCP):
+   ```bash
+   terraform apply
+   ```

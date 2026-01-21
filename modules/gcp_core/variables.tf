@@ -1,10 +1,13 @@
-variable "project_id" {
-  description = "The project ID to apply the policies to"
-  type        = string
-}
-
 variable "allowed_resource_locations" {
-  description = "List of allowed locations for resources"
-  type        = list(string)
-  default     = []
+  type = object({
+    project_ids = list(string)
+    rules = list(object({
+      allowed_values = optional(list(string))
+      denied_values  = optional(list(string))
+      tags           = optional(map(string), {})
+      tag_ids        = optional(map(string), {})
+      title          = optional(string)
+      description    = optional(string)
+    }))
+  })
 }

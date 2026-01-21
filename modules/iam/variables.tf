@@ -1,34 +1,68 @@
-variable "project_id" {
-  description = "The project ID to apply the policies to"
-  type        = string
-}
-
+# Boolean Constraints
 variable "disable_service_account_creation" {
-  description = "Disable service account creation"
-  type        = bool
-  default     = true
+  type = object({
+    project_ids = list(string)
+    rules = list(object({
+      enforce     = optional(bool)
+      tags        = optional(map(string), {})
+      tag_ids     = optional(map(string), {})
+      title       = optional(string)
+      description = optional(string)
+    }))
+  })
 }
 
 variable "disable_service_account_key_creation" {
-  description = "Disable service account key creation"
-  type        = bool
-  default     = true
+  type = object({
+    project_ids = list(string)
+    rules = list(object({
+      enforce     = optional(bool)
+      tags        = optional(map(string), {})
+      tag_ids     = optional(map(string), {})
+      title       = optional(string)
+      description = optional(string)
+    }))
+  })
 }
 
 variable "disable_service_account_key_upload" {
-  description = "Disable service account key upload"
-  type        = bool
-  default     = true
+  type = object({
+    project_ids = list(string)
+    rules = list(object({
+      enforce     = optional(bool)
+      tags        = optional(map(string), {})
+      tag_ids     = optional(map(string), {})
+      title       = optional(string)
+      description = optional(string)
+    }))
+  })
 }
 
+# List Constraints
 variable "allowed_policy_member_domains" {
-  description = "List of allowed domains for policy members"
-  type        = list(string)
-  default     = []
+  type = object({
+    project_ids = list(string)
+    rules = list(object({
+      allowed_values = optional(list(string))
+      denied_values  = optional(list(string))
+      tags           = optional(map(string), {})
+      tag_ids        = optional(map(string), {})
+      title          = optional(string)
+      description    = optional(string)
+    }))
+  })
 }
 
 variable "allow_sa_credential_lifetime_extension" {
-  description = "List of service accounts allowed to extend credential lifetime"
-  type        = list(string)
-  default     = []
+  type = object({
+    project_ids = list(string)
+    rules = list(object({
+      allowed_values = optional(list(string))
+      denied_values  = optional(list(string))
+      tags           = optional(map(string), {})
+      tag_ids        = optional(map(string), {})
+      title          = optional(string)
+      description    = optional(string)
+    }))
+  })
 }
